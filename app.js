@@ -98,35 +98,52 @@ Asteroid.prototype.draw = function(ctx) {
 function Ship(x, y) {
   MovingObject.apply(this, arguments);
   this.shipL = 25;
-  this.shipH = 15;
+  //this.shipH = 15;
   this.velocity.dx = 1;
   this.velocity.dy = 1;
+  this.angle = 3*Math.PI/2
 };
 
 Ship.prototype = new MovingObject();
 
-Ship.prototype.drawShip = function(context) {
+Ship.prototype.drawShip = function(ctx) {
   var centerX = this.x;
   var centerY = this.y;
+  var dx = this.velocity.dx;
+  var dy = this.velocity.dy;
+  var length = Math.sqrt(dx * dx + dy * dy);
+  dx /= length;
+  dy /= length;
   var shipL = 25;
   var shipH = 15;
-  var shipHatRad = 7;
-  context.save();
-  context.beginPath();
-  context.arc(centerX, centerY - shipH * .5, shipHatRad, Math.PI, 0, false);
-  context.strokeStyle = '#DF7401';
-  context.lineWidth = shipHatRad;
-  context.stroke();
 
-  context.beginPath();
-  context.moveTo(centerX - shipL/2, centerY);
-  context.lineTo(centerX + shipL/2, centerY);
-  context.lineWidth = shipH;
-  context.strokeStyle = '#2E2EFE';
-  context.lineCap = 'round';
-  context.stroke();
+  ctx.fillStyle = "blue";
+  ctx.beginPath();
 
-  context.restore();
+  ctx.arc(
+    this.x,
+    this.y,
+    this.shipL,
+    0,
+    2 * Math.PI,
+    false
+  );
+
+  ctx.fill();
+
+  ctx.fillStyle = "black";
+  ctx.beginPath();
+
+  ctx.arc(
+    this.x,
+    this.y,
+    this.shipL/5,
+    0,
+    2 * Math.PI,
+    false
+  );
+
+  ctx.fill();
 };
 
 Ship.prototype.isHit = function(asteroids) {
@@ -140,6 +157,10 @@ Ship.prototype.isHit = function(asteroids) {
   }
   return false;
 };
+
+Ship.prototype.rotate = function(change) {
+  this.velocity.dx += change;
+}
 
 Ship.prototype.countDist = function(asteroid) {
   var x = this.x - asteroid.x;
@@ -286,7 +307,12 @@ Game.prototype.keys = function() {
   key('d', function() {
     that.ship.power(1,0);
   });
-
+  key('left', function() {
+    that.ship.rotate(-.5);
+  });
+  key('right', function() {
+    that.ship.rotate(+.5);
+  });
   key('space', function() {
     that.ship.fireBullet(that);
     // var bullet = new Bullet()
