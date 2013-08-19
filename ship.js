@@ -1,9 +1,10 @@
 function Ship(x, y) {
   MovingObject.apply(this, arguments);
   this.shipL = 25;
-  this.shipH = 15;
+  //this.shipH = 15;
   this.velocity.dx = 1;
   this.velocity.dy = 1;
+  this.angle = 3*Math.PI/2
 };
 
 Ship.prototype = new MovingObject();
@@ -54,11 +55,9 @@ Ship.prototype.countDist = function(asteroid) {
   return Math.sqrt((x * x) + (y * y));
 };
 
-
-
 Ship.prototype.power = function(px, py){
-  this.velocity.dx += px;
-  this.velocity.dy += py;
+  this.velocity.dx = 3 * px;
+  this.velocity.dy = 3 * py;
   console.log("Moved");
 };
 
