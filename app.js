@@ -106,44 +106,28 @@ function Ship(x, y) {
 
 Ship.prototype = new MovingObject();
 
-Ship.prototype.drawShip = function(ctx) {
+Ship.prototype.drawShip = function(context) {
   var centerX = this.x;
   var centerY = this.y;
-  var dx = this.velocity.dx;
-  var dy = this.velocity.dy;
-  var length = Math.sqrt(dx * dx + dy * dy);
-  dx /= length;
-  dy /= length;
   var shipL = 25;
   var shipH = 15;
+  var shipHatRad = 7;
+  context.save();
+  context.beginPath();
+  context.arc(centerX, centerY - shipH * .5, shipHatRad, Math.PI, 0, false);
+  context.strokeStyle = '#DF7401';
+  context.lineWidth = shipHatRad;
+  context.stroke();
 
-  ctx.fillStyle = "blue";
-  ctx.beginPath();
+  context.beginPath();
+  context.moveTo(centerX - shipL/2, centerY);
+  context.lineTo(centerX + shipL/2, centerY);
+  context.lineWidth = shipH;
+  context.strokeStyle = '#2E2EFE';
+  context.lineCap = 'round';
+  context.stroke();
 
-  ctx.arc(
-    this.x,
-    this.y,
-    this.shipL,
-    0,
-    2 * Math.PI,
-    false
-  );
-
-  ctx.fill();
-
-  ctx.fillStyle = "black";
-  ctx.beginPath();
-
-  ctx.arc(
-    this.x,
-    this.y,
-    this.shipL/5,
-    0,
-    2 * Math.PI,
-    false
-  );
-
-  ctx.fill();
+  context.restore();
 };
 
 Ship.prototype.isHit = function(asteroids) {
@@ -168,11 +152,9 @@ Ship.prototype.countDist = function(asteroid) {
   return Math.sqrt((x * x) + (y * y));
 };
 
-
-
 Ship.prototype.power = function(px, py){
-  this.velocity.dx += px;
-  this.velocity.dy += py;
+  this.velocity.dx = 3 * px;
+  this.velocity.dy = 3 * py;
   console.log("Moved");
 };
 
@@ -282,7 +264,7 @@ Game.prototype.update = function(){
       this.bullets[j].update();
     };
   };
-  //check is ship is off the screen, then
+  //check if ship is off the screen, then
   this.ship.correctPosition();
   this.ship.update();
 
