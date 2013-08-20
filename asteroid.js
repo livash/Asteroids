@@ -8,7 +8,7 @@ function Asteroid(x, y, radius) {
 
 Asteroid.prototype = new MovingObject();
 
-Asteroid.MAX_RADIUS = 25;
+Asteroid.MAX_RADIUS = 50;
 Asteroid.randomAsteroid = function(maxX, maxY) {
   return new Asteroid(
     maxX * Math.random(),

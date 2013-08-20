@@ -4,6 +4,7 @@ function Game(xDim, yDim, numAsteroids) {
   this.bullets = [];
   this.ship = new Ship(this.xDim/2, this.yDim/2);
   this.asteroids = [];
+	this.destroyedAsteroids = 0;
   for (var i = 0; i <numAsteroids; i++) {
     this.asteroids.push(Asteroid.randomAsteroid(xDim, yDim));
   }
@@ -11,6 +12,7 @@ function Game(xDim, yDim, numAsteroids) {
 
 Game.prototype.draw = function(ctx) {
   ctx.clearRect(0, 0, this.xDim, this.yDim);
+	this.drawScore(ctx);
 
   for (var i = 0; i < this.asteroids.length; i++) {
     this.asteroids[i].draw(ctx);
@@ -23,6 +25,12 @@ Game.prototype.draw = function(ctx) {
       this.bullets[j].draw(ctx);
     }
   }
+};
+
+Game.prototype.drawScore = function(ctx) {
+	ctx.fillStyle = "blue";
+	ctx.font = "bold 16px Arial";
+	ctx.fillText("Score:" + this.destroyedAsteroids, 20, 20);
 };
 
 Game.prototype.start = function(canvasEl) {
@@ -47,8 +55,9 @@ Game.prototype.update = function(){
     for(var j = 0; j < this.asteroids.length; j++) {
       if (this.bullets[i]) {
         if (this.bullets[i].isHit(this.asteroids[j])) {
-        this.bullets.splice(i, 1);
-        this.asteroids[j] = Asteroid.randomAsteroid(this.xDim, this.yDim);
+					this.destroyedAsteroids++;
+        	this.bullets.splice(i, 1);
+        	this.asteroids[j] = Asteroid.randomAsteroid(this.xDim, this.yDim);
         }
       }
     }
